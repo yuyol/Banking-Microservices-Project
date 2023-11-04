@@ -50,7 +50,6 @@ public class AccountsController {
     public ResponseEntity<ResponseDto> createAccount(@Valid @RequestBody CustomerDto customerDto) {
 
         iAccountsService.createAccount(customerDto);
-
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new ResponseDto(AccountsConstants.STATUS_201,AccountsConstants.MESSAGE_201));
