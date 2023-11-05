@@ -1,9 +1,8 @@
 package com.yy.loans.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 // Defines a class can be mapped to a table
 @Entity
@@ -13,8 +12,10 @@ import lombok.*;
 public class Loans extends BaseEntity{
 
     @Id
+    @GeneratedValue(strategy= GenerationType.AUTO,generator="native")
+    @GenericGenerator(name = "native",strategy = "native")
     @Column(name = "loan_id")
-    private int loanId;
+    private Long loanId;
 
     @Column(name = "mobile_number")
     private String mobileNumber;

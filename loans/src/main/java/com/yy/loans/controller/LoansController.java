@@ -1,23 +1,56 @@
 package com.yy.loans.controller;
 
+import com.yy.loans.dto.ErrorResponseDto;
 import com.yy.loans.constants.LoansConstants;
 import com.yy.loans.dto.LoansDto;
 import com.yy.loans.dto.ResponseDto;
 import com.yy.loans.service.ILoansService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+
+@Tag(
+        name = "CRUD REST APIs for loans in YY Bank",
+        description = "CRUD REST APIs in YY Bank to CREATE, FETCH, UPDATE, DELETE loans details"
+)
 @RestController
 @RequestMapping(path = "/api",produces = {MediaType.APPLICATION_JSON_VALUE})
 @AllArgsConstructor
+@Validated
 public class LoansController {
     ILoansService iLoansService;
 
+    @Operation(
+            summary = "Create Loan REST API",
+            description = "REST API to create new loan inside YY Bank"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "HTTP Status CREATED"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    }
+    )
     @PostMapping("/createLoan")
-    public ResponseEntity<ResponseDto> createLoan(@RequestParam String mobileNumber) {
+    public ResponseEntity<ResponseDto> createLoan(@RequestParam
+                                                  String mobileNumber) {
 
         iLoansService.createLoan(mobileNumber);
 
@@ -26,4 +59,67 @@ public class LoansController {
                 .body(new ResponseDto(LoansConstants.STATUS_201,LoansConstants.MESSAGE_201));
     }
 
+
+    @Operation(
+            summary = "Fetch Loan Details REST API",
+            description = "REST API to fetch loan details based on a mobile number"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    }
+    )
+    @GetMapping("/fetchLoan")
+    public ResponseEntity<LoansDto> fetchLoanDetails(@RequestParam
+                                                     String mobileNumber) {
+
+        LoansDto loansDto =  iLoansService.fetchLoanDetails(mobileNumber);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(loansDto);
+    }
+
+
+    @PutMapping("/updateLoan")
+    public ResponseEntity<ResponseDto> updateLoanDetails(@RequestBody
+                                              LoansDto loansDto) {
+        boolean isUpdated = iLoansService.updateLoan(loansDto);
+
+        if(isUpdated) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new ResponseDto(LoansConstants.STATUS_200, LoansConstants.MESSAGE_200));
+        }else{
+            return ResponseEntity
+                    .status(HttpStatus.EXPECTATION_FAILED)
+                    .body(new ResponseDto(LoansConstants.STATUS_417, LoansConstants.MESSAGE_417_UPDATE));
+        }
+
+    }
+
+    @DeleteMapping("/deleteLoan")
+    public ResponseEntity<ResponseDto> deleteLoanDetails(@RequestParam
+                                                         String mobileNumber) {
+        boolean isDeleted = iLoansService.deleteLoan(mobileNumber);
+
+        if(isDeleted) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new ResponseDto(LoansConstants.STATUS_200, LoansConstants.MESSAGE_200));
+        }else{
+            return ResponseEntity
+                    .status(HttpStatus.EXPECTATION_FAILED)
+                    .body(new ResponseDto(LoansConstants.STATUS_417, LoansConstants.MESSAGE_417_DELETE));
+        }
+    }
 }
