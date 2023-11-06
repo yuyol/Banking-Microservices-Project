@@ -27,8 +27,8 @@ import org.springframework.web.bind.annotation.*;
 )
 @RestController
 @RequestMapping(path = "/api",produces = {MediaType.APPLICATION_JSON_VALUE})
-@AllArgsConstructor
 @Validated
+@AllArgsConstructor
 public class AccountsController {
 
     private IAccountsService iAccountsService;

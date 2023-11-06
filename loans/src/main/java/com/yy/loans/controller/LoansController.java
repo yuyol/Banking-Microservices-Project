@@ -89,7 +89,28 @@ public class LoansController {
                 .body(loansDto);
     }
 
-
+    @Operation(
+            summary = "Update Loan Details REST API",
+            description = "REST API to update loan details based on a loan number"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "417",
+                    description = "Expectation Failed"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    }
+    )
     @PutMapping("/updateLoan")
     public ResponseEntity<ResponseDto> updateLoanDetails(@RequestBody
                                               LoansDto loansDto) {
@@ -107,6 +128,28 @@ public class LoansController {
 
     }
 
+    @Operation(
+            summary = "Delete Loan Details REST API",
+            description = "REST API to delete Loan details based on a mobile number"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "417",
+                    description = "Expectation Failed"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    }
+    )
     @DeleteMapping("/deleteLoan")
     public ResponseEntity<ResponseDto> deleteLoanDetails(@RequestParam
                                                          String mobileNumber) {
