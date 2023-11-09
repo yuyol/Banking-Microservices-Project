@@ -1,8 +1,6 @@
 package com.yy.loans.exception;
 
-import com.yy.accounts.dto.ErrorResponseDto;
-import com.yy.accounts.exception.CustomerAlreadyExistsException;
-import com.yy.accounts.exception.ResourceNotFountException;
+import com.yy.loans.dto.ErrorResponseDto;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -17,76 +15,60 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-/**
- * Handle global exception
- */
-// Used to handle exceptions globally inside app
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    /**
-     * Handle the not validation failure
-     * @param ex
-     * @param headers
-     * @param status
-     * @param request
-     * @return
-     */
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        Map<String, String> validationErrors = new HashMap<>();
+        List<ObjectError> validationErrorList = ex.getBindingResult().getAllErrors();
 
-        // store the error field name with the error message
-        Map<String,String> validationErrors = new HashMap<>();
-        // iterate all validation errors failed
-        for (ObjectError error : ex.getBindingResult().getAllErrors()) {
-            // e.g., "name"
+        validationErrorList.forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
-            // e.g., "The length of the customer name should be between 4 to 30"
             String validationMsg = error.getDefaultMessage();
-            validationErrors.put(fieldName,validationMsg);
-        }
-
+            validationErrors.put(fieldName, validationMsg);
+        });
         return new ResponseEntity<>(validationErrors, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleGlobalException(Exception exception,
-                                                                            WebRequest webRequest) {
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto(
+                                                                  WebRequest webRequest) {
+        ErrorResponseDto errorResponseDTO = new ErrorResponseDto(
                 webRequest.getDescription(false),
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 exception.getMessage(),
                 LocalDateTime.now()
         );
-
-        return new ResponseEntity<>(errorResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(com.yy.accounts.exception.ResourceNotFountException.class)
-    public ResponseEntity<ErrorResponseDto> handleResourceNotFoundException(ResourceNotFountException exception,
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleResourceNotFoundException(ResourceNotFoundException exception,
                                                                             WebRequest webRequest) {
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto(
+        ErrorResponseDto errorResponseDTO = new ErrorResponseDto(
                 webRequest.getDescription(false),
                 HttpStatus.NOT_FOUND,
                 exception.getMessage(),
                 LocalDateTime.now()
         );
-
-        return new ResponseEntity<>(errorResponseDto, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(CustomerAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponseDto> handleCustomerAlreadyExistsException(CustomerAlreadyExistsException exception,
-                                                                                 WebRequest webRequest) {
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto(
+    @ExceptionHandler(LoanAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponseDto> handleLoanAlreadyExistsException(LoanAlreadyExistsException exception,
+                                                                             WebRequest webRequest){
+        ErrorResponseDto errorResponseDTO = new ErrorResponseDto(
                 webRequest.getDescription(false),
                 HttpStatus.BAD_REQUEST,
                 exception.getMessage(),
                 LocalDateTime.now()
         );
-
-        return new ResponseEntity<>(errorResponseDto, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_REQUEST);
     }
+
 }

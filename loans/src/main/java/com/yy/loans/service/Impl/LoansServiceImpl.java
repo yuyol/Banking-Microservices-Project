@@ -3,7 +3,8 @@ package com.yy.loans.service.Impl;
 import com.yy.loans.constants.LoansConstants;
 import com.yy.loans.dto.LoansDto;
 import com.yy.loans.entity.Loans;
-import com.yy.loans.exception.ResourceNotFountException;
+import com.yy.loans.exception.LoanAlreadyExistsException;
+import com.yy.loans.exception.ResourceNotFoundException;
 import com.yy.loans.mapper.LoansMapper;
 import com.yy.loans.repository.LoansRepository;
 import com.yy.loans.service.ILoansService;
@@ -26,7 +27,10 @@ public class LoansServiceImpl implements ILoansService {
      */
     @Override
     public void createLoan(String mobileNumber) {
-
+        Optional<Loans> byMobileNumber = loansRepository.findByMobileNumber(mobileNumber);
+        if(byMobileNumber.isPresent()) {
+            throw new LoanAlreadyExistsException("Loan already existed");
+        }
         Loans loans = createNewLoan(mobileNumber);
         loansRepository.save(loans);
     }
@@ -55,7 +59,7 @@ public class LoansServiceImpl implements ILoansService {
     @Override
     public LoansDto fetchLoanDetails(String mobileNumber) {
         Loans loans = loansRepository.findByMobileNumber(mobileNumber).orElseThrow(
-                () -> new ResourceNotFountException("Loans","Mobile Number",mobileNumber)
+                () -> new ResourceNotFoundException("Loans","Mobile Number",mobileNumber)
         );
 
         LoansDto loansDto = LoansMapper.mapToLoansDto(loans,new LoansDto());
@@ -71,7 +75,7 @@ public class LoansServiceImpl implements ILoansService {
     public boolean updateLoan(LoansDto loansDto) {
 
         Loans loans = loansRepository.findByMobileNumber(loansDto.getMobileNumber()).orElseThrow(
-                () -> new ResourceNotFountException("Loans", "Mobile Number", loansDto.getMobileNumber())
+                () -> new ResourceNotFoundException("Loans", "Mobile Number", loansDto.getMobileNumber())
         );
         LoansMapper.mapToLoans(loansDto, loans);
         loansRepository.save(loans);
@@ -88,7 +92,7 @@ public class LoansServiceImpl implements ILoansService {
     public boolean deleteLoan(String mobileNumber) {
 
         Loans loans = loansRepository.findByMobileNumber(mobileNumber).orElseThrow(
-                () -> new ResourceNotFountException("Loans", "Mobile number", mobileNumber)
+                () -> new ResourceNotFoundException("Loans", "Mobile number", mobileNumber)
         );
 
         loansRepository.deleteById(loans.getLoanId());

@@ -11,6 +11,8 @@
 	<groupId>com.yy</groupId>
 	<artifactId>accounts</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+<!--	Packaging the microservice-->
+	<packaging>jar</packaging>
 	<name>accounts</name>
 	<description>accounts</description>
 	<properties>

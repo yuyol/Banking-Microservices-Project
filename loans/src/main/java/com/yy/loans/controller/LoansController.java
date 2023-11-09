@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -50,7 +52,9 @@ public class LoansController {
     )
     @PostMapping("/createLoan")
     public ResponseEntity<ResponseDto> createLoan(@RequestParam
+                                                      @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
                                                   String mobileNumber) {
+
 
         iLoansService.createLoan(mobileNumber);
 
@@ -80,6 +84,7 @@ public class LoansController {
     )
     @GetMapping("/fetchLoan")
     public ResponseEntity<LoansDto> fetchLoanDetails(@RequestParam
+                                                         @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
                                                      String mobileNumber) {
 
         LoansDto loansDto =  iLoansService.fetchLoanDetails(mobileNumber);
@@ -112,7 +117,7 @@ public class LoansController {
     }
     )
     @PutMapping("/updateLoan")
-    public ResponseEntity<ResponseDto> updateLoanDetails(@RequestBody
+    public ResponseEntity<ResponseDto> updateLoanDetails(@Valid @RequestBody
                                               LoansDto loansDto) {
         boolean isUpdated = iLoansService.updateLoan(loansDto);
 
@@ -152,6 +157,7 @@ public class LoansController {
     )
     @DeleteMapping("/deleteLoan")
     public ResponseEntity<ResponseDto> deleteLoanDetails(@RequestParam
+                                                             @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
                                                          String mobileNumber) {
         boolean isDeleted = iLoansService.deleteLoan(mobileNumber);
 
