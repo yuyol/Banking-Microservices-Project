@@ -1,6 +1,7 @@
 package com.yy.accounts.controller;
 
 import com.yy.accounts.constants.AccountsConstants;
+import com.yy.accounts.dto.AccountsContactInfoDto;
 import com.yy.accounts.dto.CustomerDto;
 import com.yy.accounts.dto.ErrorResponseDto;
 import com.yy.accounts.dto.ResponseDto;
@@ -51,6 +52,12 @@ public class AccountsController {
 
     @Autowired
     private Environment environment;
+
+    /**
+     * Autowired AccountsContactInfoDto
+     */
+    @Autowired
+    private AccountsContactInfoDto accountsContactInfoDto;
 
     /**
      * Create Account
@@ -246,5 +253,35 @@ public class AccountsController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(environment.getProperty("JAVA_HOME"));
+    }
+
+    /**
+     * Return the account contact information, will get the contact info
+     * that defined in the properties yaml file
+     * @return
+     */
+    @Operation(
+            summary = "Get Contact Info",
+            description = "Contact Info versions details that is installed into accounts microservice"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    }
+    )
+    @GetMapping("/contact-info")
+    public ResponseEntity<AccountsContactInfoDto> getContactInfo() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(accountsContactInfoDto);
     }
 }
