@@ -14,3 +14,21 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  config:
+    import:
+      - "application_qa.yml"
+      - "application_prod.yml"
+  profiles:
+    active:
+      - "qa"
+
+build:
+  version: "3.0"
+
+loans:
+  message: "Welcome to YY Bank loans related local APIs"
+  contactDetails:
+    name: "Yang Yu - Developer"
+    email: "yy368@uw.edu"
+  onCallSupport:
+    - (425)543-8889
