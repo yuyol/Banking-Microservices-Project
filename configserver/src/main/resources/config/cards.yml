@@ -1,0 +1,10 @@
+build:
+  version: "3.0"
+
+cards:
+  message: "Welcome to YY Bank accounts related local APIs"
+  contactDetails:
+    name: "Yang Yu - Developer"
+    email: "yy368@uw.edu"
+  onCallSupport:
+    - (425)543-8889
