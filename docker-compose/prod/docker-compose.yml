@@ -46,7 +46,7 @@ services:
       service: network-deploy-service
 
   configserver:
-    image: "yyol/configserver:s6"
+    image: "yyol/configserver:s7"
     container_name: configserver-ms
     ports:
       - "8071:8071"
@@ -64,7 +64,7 @@ services:
       service: microservice-base-config
 
   accounts:
-    image: "yyol/accounts:s6"
+    image: "yyol/accounts:s7"
     container_name: accounts-ms
     ports:
       - "8080:8080"
@@ -79,7 +79,7 @@ services:
       service: microservice-configserver-config
 
   loans:
-    image: "yyol/loans:s6"
+    image: "yyol/loans:s7"
     container_name: loans-ms
     ports:
       - "8090:8090"
@@ -94,7 +94,7 @@ services:
       service: microservice-configserver-config
 
   cards:
-    image: "yyol/cards:s6"
+    image: "yyol/cards:s7"
     container_name: cards-ms
     ports:
       - "9000:9000"
