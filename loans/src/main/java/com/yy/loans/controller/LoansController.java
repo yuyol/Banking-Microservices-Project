@@ -194,7 +194,7 @@ public class LoansController {
      */
     @Operation(
             summary = "Get Build information",
-            description = "Get Build information that is deployed into loans microservice"
+            description = "Get Build information that is deployed into cards microservice"
     )
     @ApiResponses({
             @ApiResponse(
@@ -205,7 +205,7 @@ public class LoansController {
                     responseCode = "500",
                     description = "HTTP Status Internal Server Error",
                     content = @Content(
-                            schema = @Schema(implementation = com.yy.accounts.dto.ErrorResponseDto.class)
+                            schema = @Schema(implementation = ErrorResponseDto.class)
                     )
             )
     }
@@ -219,8 +219,8 @@ public class LoansController {
 
 
     @Operation(
-            summary = "Get Build information",
-            description = "Get Java versions details that is installed into loans microservice"
+            summary = "Get Java version",
+            description = "Get Java versions details that is installed into cards microservice"
     )
     @ApiResponses({
             @ApiResponse(
@@ -231,7 +231,7 @@ public class LoansController {
                     responseCode = "500",
                     description = "HTTP Status Internal Server Error",
                     content = @Content(
-                            schema = @Schema(implementation = com.yy.accounts.dto.ErrorResponseDto.class)
+                            schema = @Schema(implementation = ErrorResponseDto.class)
                     )
             )
     }
