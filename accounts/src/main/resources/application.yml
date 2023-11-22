@@ -59,3 +59,9 @@ info:
     name: "accounts"
     description: "YY Bank Accounts Application"
     version: "1.0.0"
+
+logging:
+  level:
+    com:
+      yy:
+        accounts: DEBUG

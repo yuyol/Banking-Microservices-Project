@@ -12,7 +12,7 @@ spring:
     gateway:
       discovery:
         locator:
-          enabled: true
+          enabled: false
           lowerCaseServiceId: true
 
 management:
@@ -32,3 +32,9 @@ info:
     name: "gatewayserver"
     description: "YY Bank Gateway Server Application"
     version: "1.0.0"
+
+logging:
+  level:
+    com:
+      yy:
+        gatewayserver: DEBUG
